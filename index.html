@@ -79,23 +79,39 @@
             gap: 8px;
         }
         button {
-            padding: 8px 15px;
+            padding: 8px 12px;
             border: none;
             border-radius: 3px;
             cursor: pointer;
             font-weight: bold;
             flex: 1;
-            min-width: 100px;
+            min-width: 80px;
             margin: 0;
+            font-size: 12px;
         }
+        
+        @media (min-width: 600px) {
+            button {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+        }
+        
         .yes-btn {
             background-color: #2ecc71;
             color: white;
         }
+        
+        .sometimes-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        
         .no-btn {
             background-color: #e74c3c;
             color: white;
         }
+        
         .unsure-btn {
             background-color: #f39c12;
             color: white;
@@ -154,6 +170,9 @@
         .answer-yes {
             color: #2ecc71;
         }
+        .answer-sometimes {
+            color: #27ae60;
+        }
         .answer-no {
             color: #e74c3c;
         }
@@ -204,6 +223,12 @@
             margin: 5px 0;
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .float-score-item {
+            margin-right: 5px;
+            margin-bottom: 5px;
         }
         
         .float-score-label {
@@ -214,12 +239,17 @@
             border-radius: 50%;
             text-align: center;
             font-weight: bold;
-            margin-right: 5px;
+            margin-right: 3px;
             font-size: 12px;
         }
         
         .yes-label {
             background-color: #2ecc71;
+            color: white;
+        }
+        
+        .sometimes-label {
+            background-color: #27ae60;
             color: white;
         }
         
@@ -274,14 +304,15 @@
         </div>
     </div>
     
-    <!-- Add floating score overlay -->
+    <!-- Add floating score overlay with updated breakdown -->
     <div class="floating-score" id="floating-score">
         <h3>Current Score</h3>
         <div class="float-score-value" id="float-score-value">0%</div>
         <div class="float-score-breakdown">
-            <div><span class="float-score-label yes-label">✓</span> <span id="float-yes-count">0</span></div>
-            <div><span class="float-score-label no-label">✗</span> <span id="float-no-count">0</span></div>
-            <div><span class="float-score-label unsure-label">?</span> <span id="float-unsure-count">0</span></div>
+            <div class="float-score-item"><span class="float-score-label yes-label">✓</span> <span id="float-yes-count">0</span></div>
+            <div class="float-score-item"><span class="float-score-label sometimes-label">~</span> <span id="float-sometimes-count">0</span></div>
+            <div class="float-score-item"><span class="float-score-label no-label">✗</span> <span id="float-no-count">0</span></div>
+            <div class="float-score-item"><span class="float-score-label unsure-label">?</span> <span id="float-unsure-count">0</span></div>
         </div>
         <div id="float-progress">0 / 0 questions</div>
     </div>
@@ -305,6 +336,8 @@
         let score = 0;
         let unsureCount = 0;
         let noCount = 0;
+        let sometimesCount = 0;
+        let yesCount = 0;
 
         // Load data and initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -371,6 +404,8 @@
             score = 0;
             unsureCount = 0;
             noCount = 0;
+            sometimesCount = 0;
+            yesCount = 0;
             
             const classification = assessmentData.securityPracticesClassification;
             
@@ -426,10 +461,12 @@
                                 <p>${practice}</p>
                                 <div class="buttons">
                                     <button class="yes-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'yes')">I Do</button>
+                                    <button class="sometimes-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'sometimes')">I Do Sometimes</button>
                                     <button class="no-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'no')">I Don't</button>
                                     <button class="unsure-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'unsure')">I Don't Understand</button>
                                 </div>
                                 <p class="answer-indicator answer-yes" id="yes-${levelKey}-${categoryName}-${index}">✓ You do this</p>
+                                <p class="answer-indicator answer-sometimes" id="sometimes-${levelKey}-${categoryName}-${index}">~ You do this sometimes</p>
                                 <p class="answer-indicator answer-no" id="no-${levelKey}-${categoryName}-${index}">✗ You don't do this</p>
                                 <p class="answer-indicator answer-unsure" id="unsure-${levelKey}-${categoryName}-${index}">? You don't understand this question</p>
                             `;
@@ -458,7 +495,12 @@
             // Show appropriate indicator
             if (answerType === 'yes') {
                 document.getElementById(`yes-${level}-${category}-${index}`).style.display = 'block';
-                score++;
+                score += 1.0;
+                yesCount++;
+            } else if (answerType === 'sometimes') {
+                document.getElementById(`sometimes-${level}-${category}-${index}`).style.display = 'block';
+                score += 0.5;
+                sometimesCount++;
             } else if (answerType === 'no') {
                 document.getElementById(`no-${level}-${category}-${index}`).style.display = 'block';
                 noCount++;
@@ -482,7 +524,8 @@
             const scorePercent = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
             
             document.getElementById('float-score-value').textContent = `${scorePercent}%`;
-            document.getElementById('float-yes-count').textContent = score;
+            document.getElementById('float-yes-count').textContent = yesCount;
+            document.getElementById('float-sometimes-count').textContent = sometimesCount;
             document.getElementById('float-no-count').textContent = noCount;
             document.getElementById('float-unsure-count').textContent = unsureCount;
             document.getElementById('float-progress').textContent = `${answeredQuestions} / ${totalQuestions} questions`;
@@ -508,9 +551,8 @@
         function showResults() {
             const scorePercent = Math.round((score / totalQuestions) * 100);
             const answeredPercent = Math.round(((answeredQuestions - unsureCount) / totalQuestions) * 100);
-            const doPercent = Math.round((score / (answeredQuestions - unsureCount)) * 100) || 0;
             
-            document.getElementById('score').textContent = `${scorePercent}% (${score}/${totalQuestions})`;
+            document.getElementById('score').textContent = `${scorePercent}% (${score.toFixed(1)}/${totalQuestions})`;
             
             let message = '';
             if (scorePercent >= 90) {
@@ -547,11 +589,15 @@
             breakdownDiv.innerHTML = `
                 <div class="result-category">
                     <h3>I Do</h3>
-                    <div class="score">${score}</div>
+                    <div class="score">${yesCount}</div>
+                </div>
+                <div class="result-category">
+                    <h3>Sometimes</h3>
+                    <div class="score">${sometimesCount}</div>
                 </div>
                 <div class="result-category">
                     <h3>I Don't</h3>
-                    <div class="score">${answeredQuestions - score - unsureCount}</div>
+                    <div class="score">${noCount}</div>
                 </div>
                 <div class="result-category">
                     <h3>I Don't Understand</h3>
