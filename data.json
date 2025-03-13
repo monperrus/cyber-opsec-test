@@ -1,0 +1,81 @@
+{
+  "securityPracticesClassification": {
+    "level1": {
+      "name": "Essential",
+      "description": "These are fundamental security practices everyone should implement",
+      "practices": {
+        "passwordManagement": [
+          "I use a password manager to securely store all my passwords",
+          "I use unique passwords for each account",
+          "I always create strong passwords (12+ characters with mixed case, numbers, symbols)"
+        ],
+        "deviceSecurity": [
+          "I always lock my screen when stepping away from my device",
+          "I keep my operating systems and applications updated"
+        ],
+        "emailSecurity": [
+          "I verify sender email addresses and links before clicking on them"
+        ],
+        "generalSecurityPractices": [
+          "I regularly back up important data",
+          "I use privacy-concerned browser like Brave/Firefox with privacy settings"
+        ],
+        "networkSecurity": [
+        ]
+      }
+    },
+    "level2": {
+      "name": "Serious",
+      "description": "For those who want stronger security or have sensitive information",
+      "practices": {
+        "passwordManagement": [
+          "I always use two-factor authentication on all accounts",
+          "I rotate passwords regularly, especially for critical accounts",
+          "I use a security key for two-factor authentication on critical accounts"
+        ],
+        "browserSecurity": [
+          "I use privacy blocker in browser to limit third-party tracking (uBlock origin)"
+        ],
+        "emailSecurity": [
+          "I use email provider that discards non-valid SPF and DKIM emails"
+        ],
+        "networkSecurity": [
+          "I always use end-to-end encryption for my messaging and calls.",
+          "I secure my home router with a strong password",
+          "I always VPN when connecting to public Wi-Fi",
+          "I use secure DNS services (DNS over HTTPS)",
+          "I enable login notifications and I review account activity"
+        ],
+        "generalSecurityPractices": [
+          "I have full-disk encryption on all devices",
+          "I have encrypted backups"
+        ]
+      }
+    },
+    "level3": {
+      "name": "Paranoid",
+      "description": "For high-security needs or those with specific threat models",
+      "practices": {
+        "passwordManagement": [
+          "I have a physical security key for device login",
+          "I have a physical security key on all online accounts"
+        ],
+        "emailSecurity": [
+          "I only use encrypted emails with GPG"
+        ],
+        "browserSecurity": [
+          "I disable browser telemetry and tracking"
+        ],
+        "developerSecurity": [
+          "I Git-clone and build on separate containers",
+          "I sign all my commits"
+        ],
+        "networkSecurity": [
+          "I always use VPN",
+          "I monitor outbound traffic; LittleSnitch or Lulu (Mac), OpenSnitch (Linux)",
+          "I have device tracking enabled and remote wipe on my devices"
+        ]
+      }
+    }
+  }
+}
