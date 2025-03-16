@@ -6,10 +6,10 @@
 const availableLanguages = {
   'en': 'English',
   'fr': 'Français',
-  'es': 'Español',
-  'de': 'Deutsch',
-  'zh': '中文',
-  'ru': 'Русский'
+  // 'es': 'Español', // no data file yet
+  // 'de': 'Deutsch', // no data file yet
+  // 'zh': '中文',     // no data file yet
+  // 'ru': 'Русский'  // no data file yet
 };
 
 // Current language
