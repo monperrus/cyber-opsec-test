@@ -679,7 +679,7 @@
         function updateFloatingScore() {
             const scorePercent = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
             
-            document.getElementById('float-score-value').textContent = `${scorePercent}%`;
+            document.getElementById('float-score-value').textContent = score;
             document.getElementById('float-yes-count').textContent = yesCount;
             document.getElementById('float-sometimes-count').textContent = sometimesCount;
             document.getElementById('float-no-count').textContent = noCount;
