@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber opsec assessment</title>
+    <link rel="stylesheet" href="styles-i18n.css">
+    <!-- Add the i18n script in the head for earlier loading -->
+    <script src="i18n.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -296,7 +299,7 @@
     </style>
 </head>
 <body>
-    <h1>Cyber opsec assessment</h1>
+    <h1 data-i18n="pageTitle">Cyber opsec assessment</h1>
     
     <div class="progress-container">
         <div class="progress-bar">
@@ -306,7 +309,7 @@
     
     <!-- Add floating score overlay with updated breakdown -->
     <div class="floating-score" id="floating-score">
-        <h3>Current Score</h3>
+        <h3 data-i18n="currentScore">Current Score</h3>
         <div class="float-score-value" id="float-score-value">0%</div>
         <div class="float-score-breakdown">
             <div class="float-score-item"><span class="float-score-label yes-label">✓</span> <span id="float-yes-count">0</span></div>
@@ -318,14 +321,14 @@
     </div>
     
     <div id="assessment-container">
-        <p>Loading assessment data...</p>
+        <p data-i18n="loadingData">Loading assessment data...</p>
     </div>
     
     <div class="results" id="results">
-        <h2>Your Security Score</h2>
+        <h2 data-i18n="securityScore">Your Security Score</h2>
         <div class="score" id="score"></div>
         <p id="score-message"></p>
-        <button class="restart-btn" onclick="restartAssessment()">Take Assessment Again</button>
+        <button class="restart-btn" onclick="restartAssessment()" data-i18n="restartButton">Take Assessment Again</button>
     </div>
 
     <script>
@@ -339,19 +342,22 @@
         let sometimesCount = 0;
         let yesCount = 0;
 
-        // Load data and initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("Loading data...");
-            fetch('data.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+        // Function to load assessment data based on current language
+        function loadAssessmentData() {
+            const container = document.getElementById('assessment-container');
+            const loadingMessage = window.i18n && window.i18n.__ ? window.i18n.__('loadingLanguageData') : 'Loading assessment data...';
+            container.innerHTML = `<p data-i18n="loadingLanguageData">${loadingMessage}</p>`;
+            
+            // Use the i18n loadLanguageData function with error handling
+            const loadData = window.i18n && window.i18n.loadLanguageData ? window.i18n.loadLanguageData : function() {
+                return fetch('data.json').then(response => response.json());
+            };
+            
+            loadData()
                 .then(data => {
                     console.log("Data loaded successfully");
                     assessmentData = data;
+                    window.assessmentData = data; // Make it accessible to i18n
                     totalQuestions = countTotalQuestions();
                     initAssessment();
                 })
@@ -360,6 +366,89 @@
                     document.getElementById('assessment-container').innerHTML = 
                         '<p style="color: red;">Error loading assessment data. Please check the console for details.</p>';
                 });
+        }
+        
+        // Function to reload data when language changes
+        function reloadAssessmentData() {
+            // Save answers before reloading
+            const savedAnswers = [];
+            if (assessmentData) {
+                document.querySelectorAll('.answered').forEach(item => {
+                    const id = item.id;
+                    const match = id.match(/practice-([^-]+)-([^-]+)-(\d+)/);
+                    if (match) {
+                        const [_, level, category, index] = match;
+                        
+                        let answerType = null;
+                        if (document.getElementById(`yes-${level}-${category}-${index}`).style.display === 'block') {
+                            answerType = 'yes';
+                        } else if (document.getElementById(`sometimes-${level}-${category}-${index}`).style.display === 'block') {
+                            answerType = 'sometimes';
+                        } else if (document.getElementById(`no-${level}-${category}-${index}`).style.display === 'block') {
+                            answerType = 'no';
+                        } else if (document.getElementById(`unsure-${level}-${category}-${index}`).style.display === 'block') {
+                            answerType = 'unsure';
+                        }
+                        
+                        if (answerType) {
+                            savedAnswers.push({
+                                level,
+                                category,
+                                index: parseInt(index),
+                                answerType
+                            });
+                        }
+                    }
+                });
+            }
+            
+            // Reset counters
+            answeredQuestions = 0;
+            score = 0;
+            unsureCount = 0;
+            noCount = 0;
+            sometimesCount = 0;
+            yesCount = 0;
+            
+            // Load new data
+            loadAssessmentData().then(() => {
+                // Restore answers if possible
+                if (savedAnswers.length > 0) {
+                    savedAnswers.forEach(answer => {
+                        try {
+                            const element = document.getElementById(`practice-${answer.level}-${answer.category}-${answer.index}`);
+                            if (element) {
+                                answerQuestion(answer.level, answer.category, answer.index, answer.answerType);
+                            }
+                        } catch (e) {
+                            console.error(`Could not restore answer: ${e}`);
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Make reloadAssessmentData available globally for i18n.js
+        window.reloadAssessmentData = reloadAssessmentData;
+        
+        // Expose variables needed by i18n
+        window.totalQuestions = totalQuestions;
+        window.answeredQuestions = answeredQuestions;
+
+        // Load data and initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Starting application...");
+            
+            // Check if i18n is available
+            if (window.i18n && typeof window.i18n.initLanguages === 'function') {
+                // Initialize internationalization
+                window.i18n.initLanguages();
+            } else {
+                console.error("i18n is not available. Using fallback.");
+            }
+            
+            // Load assessment data based on the selected language
+            loadAssessmentData();
         });
 
         // Count total questions
@@ -415,15 +504,20 @@
                 // Create level description header
                 const levelDiv = document.createElement('div');
                 levelDiv.className = `level-header ${levelKey}`;
+                
+                // Translate level name if i18n is available
+                const levelName = window.i18n && window.i18n.__ ? window.i18n.__(level.name) : level.name;
+                const securityPractices = window.i18n && window.i18n.__ ? 
+                    window.i18n.__('securityPractices', level.name) : `${level.name} Security Practices`;
+                
                 levelDiv.innerHTML = `
-                    <h2><i class="fas fa-shield-alt"></i> ${level.name} Security Practices</h2>
+                    <h2><i class="fas fa-shield-alt"></i> ${securityPractices}</h2>
                     <div class="level-description-box">
                         <p class="level-description"><strong>⚠️ ${level.description}</strong></p>
                     </div>
                 `;
                 container.appendChild(levelDiv);
 
-                
                 if (!level.practices) {
                     return;
                 }
@@ -443,11 +537,15 @@
                         .replace(/([A-Z])/g, ' $1')
                         .replace(/^./, str => str.toUpperCase());
                     
+                    // Try to translate the category name
+                    const translatedCategoryName = window.i18n && window.i18n.__ ? 
+                        window.i18n.__(categoryName) : formattedCategoryName;
+                    
                     // Create level indicator span
-                    const levelIndicator = `<span class="level-indicator ${levelKey}-indicator">${level.name}</span>`;
+                    const levelIndicator = `<span class="level-indicator ${levelKey}-indicator">${levelName}</span>`;
                     
                     categoryDiv.innerHTML = `
-                        <h2 class="category-title">${formattedCategoryName} ${levelIndicator}</h2>
+                        <h2 class="category-title">${translatedCategoryName} ${levelIndicator}</h2>
                     `;
                     
                     // Add each practice as a question
@@ -457,18 +555,21 @@
                             practiceDiv.className = 'practice-item';
                             practiceDiv.id = `practice-${levelKey}-${categoryName}-${index}`;
                             
+                            // Translate button labels and answer indicators
+                            const getTranslation = (key) => window.i18n && window.i18n.__ ? window.i18n.__(key) : key;
+                            
                             practiceDiv.innerHTML = `
                                 <p>${practice}</p>
                                 <div class="buttons">
-                                    <button class="yes-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'yes')">I Do</button>
-                                    <button class="sometimes-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'sometimes')">I Do Sometimes</button>
-                                    <button class="no-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'no')">I Don't</button>
-                                    <button class="unsure-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'unsure')">I Don't Understand</button>
+                                    <button class="yes-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'yes')">${getTranslation('iDo')}</button>
+                                    <button class="sometimes-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'sometimes')">${getTranslation('iDoSometimes')}</button>
+                                    <button class="no-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'no')">${getTranslation('iDont')}</button>
+                                    <button class="unsure-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'unsure')">${getTranslation('iDontUnderstand')}</button>
                                 </div>
-                                <p class="answer-indicator answer-yes" id="yes-${levelKey}-${categoryName}-${index}">✓ You do this</p>
-                                <p class="answer-indicator answer-sometimes" id="sometimes-${levelKey}-${categoryName}-${index}">~ You do this sometimes</p>
-                                <p class="answer-indicator answer-no" id="no-${levelKey}-${categoryName}-${index}">✗ You don't do this</p>
-                                <p class="answer-indicator answer-unsure" id="unsure-${levelKey}-${categoryName}-${index}">? You don't understand this question</p>
+                                <p class="answer-indicator answer-yes" id="yes-${levelKey}-${categoryName}-${index}">${getTranslation('youDoThis')}</p>
+                                <p class="answer-indicator answer-sometimes" id="sometimes-${levelKey}-${categoryName}-${index}">${getTranslation('youDoThisSometimes')}</p>
+                                <p class="answer-indicator answer-no" id="no-${levelKey}-${categoryName}-${index}">${getTranslation('youDontDoThis')}</p>
+                                <p class="answer-indicator answer-unsure" id="unsure-${levelKey}-${categoryName}-${index}">${getTranslation('youDontUnderstand')}</p>
                             `;
                             
                             categoryDiv.appendChild(practiceDiv);
@@ -485,6 +586,10 @@
             // Reset progress bar
             updateProgressBar();
             updateFloatingScore();
+            
+            // Update window variables for i18n
+            window.totalQuestions = totalQuestions;
+            window.answeredQuestions = answeredQuestions;
         }
 
         // Handle user's answer
@@ -517,6 +622,9 @@
             if (answeredQuestions === totalQuestions) {
                 showResults();
             }
+            
+            // Update window variables for i18n
+            window.answeredQuestions = answeredQuestions;
         }
 
         // Update the floating score
@@ -528,7 +636,10 @@
             document.getElementById('float-sometimes-count').textContent = sometimesCount;
             document.getElementById('float-no-count').textContent = noCount;
             document.getElementById('float-unsure-count').textContent = unsureCount;
-            document.getElementById('float-progress').textContent = `${answeredQuestions} / ${totalQuestions} questions`;
+            
+            // Get translated string for "questions"
+            const questionsText = window.i18n && window.i18n.__ ? window.i18n.__('questions') : 'questions';
+            document.getElementById('float-progress').textContent = `${answeredQuestions} / ${totalQuestions} ${questionsText}`;
             
             // Update color of score based on percentage
             const scoreElement = document.getElementById('float-score-value');
@@ -550,23 +661,25 @@
         // Show results
         function showResults() {
             const scorePercent = Math.round((score / totalQuestions) * 100);
-            const answeredPercent = Math.round(((answeredQuestions - unsureCount) / totalQuestions) * 100);
             
             document.getElementById('score').textContent = `${scorePercent}% (${score.toFixed(1)}/${totalQuestions})`;
             
+            // Use i18n for result messages
+            const getTranslation = (key, ...params) => window.i18n && window.i18n.__ ? window.i18n.__(key, ...params) : key;
+            
             let message = '';
             if (scorePercent >= 90) {
-                message = 'Excellent! Your security practices are top-notch.';
+                message = getTranslation('excellent');
             } else if (scorePercent >= 70) {
-                message = 'Good job! You have solid security habits, but there\'s room for improvement.';
+                message = getTranslation('goodJob');
             } else if (scorePercent >= 50) {
-                message = 'You\'re on the right track, but should consider adopting more security practices.';
+                message = getTranslation('onTrack');
             } else {
-                message = 'Your security practices need significant improvement. Consider implementing more of the suggested practices.';
+                message = getTranslation('needsImprovement');
             }
             
             if (unsureCount > 0) {
-                message += ` You didn't understand ${unsureCount} question${unsureCount > 1 ? 's' : ''}.`;
+                message += ' ' + getTranslation('didntUnderstand', unsureCount);
             }
             
             document.getElementById('score-message').textContent = message;
@@ -585,22 +698,22 @@
                 breakdownDiv.innerHTML = '';
             }
             
-            // Add breakdown categories
+            // Add breakdown categories with translations
             breakdownDiv.innerHTML = `
                 <div class="result-category">
-                    <h3>I Do</h3>
+                    <h3>${getTranslation('iDo')}</h3>
                     <div class="score">${yesCount}</div>
                 </div>
                 <div class="result-category">
-                    <h3>Sometimes</h3>
+                    <h3>${getTranslation('iDoSometimes')}</h3>
                     <div class="score">${sometimesCount}</div>
                 </div>
                 <div class="result-category">
-                    <h3>I Don't</h3>
+                    <h3>${getTranslation('iDont')}</h3>
                     <div class="score">${noCount}</div>
                 </div>
                 <div class="result-category">
-                    <h3>I Don't Understand</h3>
+                    <h3>${getTranslation('iDontUnderstand')}</h3>
                     <div class="score">${unsureCount}</div>
                 </div>
             `;

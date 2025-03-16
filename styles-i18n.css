@@ -1,0 +1,40 @@
+/**
+ * Styles for internationalization support
+ */
+.language-selector {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  z-index: 2000;
+  background-color: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+}
+
+.language-selector label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.language-selector select {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background-color: white;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .language-selector {
+    position: static;
+    margin: 10px auto;
+    max-width: 200px;
+    text-align: center;
+  }
+}

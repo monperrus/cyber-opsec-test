@@ -1,0 +1,124 @@
+{
+  "securityPracticesClassification": {
+    "level1": {
+      "name": "Essentiel",
+      "description": "Ce sont des pratiques de sécurité fondamentales que tout le monde devrait mettre en œuvre",
+      "practices": {
+        "passwordManagement": [
+          "J'utilise un gestionnaire de mots de passe pour stocker en toute sécurité tous mes mots de passe",
+          "J'utilise des mots de passe uniques pour chaque compte",
+          "Je crée toujours des mots de passe forts (12+ caractères avec majuscules, minuscules, chiffres, symboles)",
+          "Je ne partage jamais mes mots de passe avec d'autres personnes",
+          "Je n'utilise pas d'informations facilement devinables dans mes mots de passe (noms, dates de naissance, etc.)"
+        ],
+        "deviceSecurity": [
+          "Je verrouille toujours mon écran lorsque je m'éloigne de mon appareil",
+          "Je maintiens à jour mes systèmes d'exploitation et mes applications",
+          "J'ai installé et mis à jour un logiciel antivirus/anti-malware",
+          "Je ne laisse pas mes appareils sans surveillance dans des lieux publics"
+        ],
+        "emailSecurity": [
+          "Je vérifie les adresses e-mail des expéditeurs et les liens avant de cliquer dessus",
+          "Je n'ouvre pas les pièces jointes suspectes",
+          "Je suis attentif aux tentatives de phishing",
+          "J'utilise des filtres anti-spam sur mes comptes de messagerie",
+          "Je n'utilise pas mon e-mail principal pour les services promotionnels ou moins importants"
+        ],
+        "generalSecurityPractices": [
+          "Je sauvegarde régulièrement les données importantes",
+          "J'utilise un navigateur soucieux de la confidentialité comme Brave/Firefox avec des paramètres de confidentialité",
+          "Je vérifie les autorisations des applications avant de les installer",
+          "Je révise mes paramètres de confidentialité sur les réseaux sociaux"
+        ],
+        "networkSecurity": [
+          "J'utilise un mot de passe wifi (WPA) pour mon réseau Wi-Fi domestique",
+          "J'ai changé le mot de passe par défaut de mon routeur"
+        ]
+      }
+    },
+    "level2": {
+      "name": "Sérieux",
+      "description": "Pour ceux qui veulent une sécurité renforcée ou qui possèdent des informations sensibles",
+      "practices": {
+        "passwordManagement": [
+          "J'utilise toujours l'authentification à deux facteurs sur tous mes comptes",
+          "Je change régulièrement mes mots de passe, en particulier pour les comptes critiques",
+          "J'utilise une clé de sécurité pour l'authentification à deux facteurs sur les comptes critiques",
+          "J'ai des questions et réponses de sécurité différentes pour chaque compte",
+          "J'utilise différents comptes e-mail pour différents usages",
+          "Je vérifie régulièrement mon gestionnaire de mots de passe pour détecter les mots de passe faibles ou compromis"
+        ],
+        "browserSecurity": [
+          "J'utilise un bloqueur de confidentialité dans le navigateur pour limiter le suivi par des tiers (uBlock origin)",
+          "J'utilise la navigation privée/incognito pour les activités sensibles"
+        ],
+        "emailSecurity": [
+          "J'utilise un fournisseur d'e-mail qui écarte les e-mails SPF et DKIM non valides",
+          "J'ai des alias e-mail ou des adresses e-mail jetables pour les inscriptions",
+          "Je vérifie la destination avant de cliquer sur des URL raccourcies",
+          "Je vérifie les signatures numériques sur les e-mails importants"
+        ],
+        "networkSecurity": [
+          "J'utilise toujours le chiffrement de bout en bout pour mes messages et appels",
+          "Je sécurise mon routeur domestique avec un mot de passe fort",
+          "J'utilise toujours un VPN lors de la connexion au Wi-Fi public",
+          "J'utilise des services DNS sécurisés (DNS via HTTPS)",
+          "J'active les notifications de connexion et je vérifie l'activité du compte",
+          "J'ai un Wi-Fi invité séparé pour les visiteurs",
+          "Je vérifie régulièrement quels appareils sont connectés à mon réseau"
+        ],
+        "generalSecurityPractices": [
+          "J'ai un chiffrement complet du disque sur tous mes appareils",
+          "J'ai des sauvegardes chiffrées",
+          "Je maintiens des sauvegardes hors ligne des données critiques",
+          "Je déchiquette ou supprime en toute sécurité les documents sensibles"
+        ]
+      }
+    },
+    "level3": {
+      "name": "Paranoïaque",
+      "description": "Pour les besoins de haute sécurité ou ceux qui ont des modèles de menace spécifiques",
+      "practices": {
+        "passwordManagement": [
+          "J'ai une clé de sécurité physique pour la connexion aux appareils",
+          "J'ai une clé de sécurité physique sur tous mes comptes en ligne",
+          "Je n'utilise pas de mots de passe, j'utilise des phrases de passe lorsque c'est approprié"
+        ],
+        "emailSecurity": [
+          "Je n'utilise que des e-mails chiffrés avec GPG",
+          "Je vérifie les empreintes PGP avant la communication",
+          "Je change régulièrement mes clés PGP"
+        ],
+        "browserSecurity": [
+          "Je désactive la télémétrie et le suivi du navigateur",
+          "J'utilise la compartimentation du navigateur pour différentes tâches",
+          "J'utilise un navigateur séparé pour les activités financières ou sensibles"
+        ],
+        "developerSecurity": [
+          "J'utilise des environnements de développement isolés pour le code non fiable, je clone Git et compile dans des conteneurs séparés",
+          "Je signe tous mes commits",
+          "J'analyse les vulnérabilités des dépendances pour tous les projets que j'installe",
+          "Je vérifie les sommes de contrôle avant d'installer des logiciels",
+          "J'examine le code source avant de le compiler ou de l'exécuter"
+        ],
+        "networkSecurity": [
+          "J'utilise toujours un VPN",
+          "Je surveille le trafic sortant ; LittleSnitch ou Lulu (Mac), OpenSnitch (Linux)",
+          "J'ai activé le suivi des appareils et l'effacement à distance sur mes appareils",
+          "J'utilise des systèmes de détection d'intrusion, j'audit régulièrement mon réseau pour détecter les appareils non autorisés"
+        ],
+        "advancedDeviceSecurity": [
+          "J'utilise des ordinateurs air-gapped pour les tâches hautement sensibles",
+          "J'utilise des systèmes d'exploitation orientés sécurité (Qubes, Tails, etc.)",
+          "J'utilise la randomisation d'adresse MAC",
+          "J'utilise un démarrage sécurisé avec une racine de confiance matérielle"
+        ],
+        "operationalSecurity": [
+          "Je pratique la contre-surveillance lorsque nécessaire",
+          "J'utilise des appareils jetables pour les activités à haut risque",
+          "J'ai un protocole de communication sécurisé pour les urgences"
+        ]
+      }
+    }
+  }
+}
