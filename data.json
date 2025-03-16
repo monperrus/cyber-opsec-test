@@ -5,7 +5,7 @@
       "description": "These are fundamental security practices everyone should implement",
       "practices": {
         "passwordManagement": [
-          "I use a password manager to securely store all my passwords",
+          "I use a password manager to securely store all my passwords (Google Passwords, Bitwarden, etc)",
           "I use unique passwords for each account",
           "I always create strong passwords (12+ characters with mixed case, numbers, symbols)",
           "I never share my passwords with others",
