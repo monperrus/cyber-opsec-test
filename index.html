@@ -296,6 +296,37 @@
                 top: 0;
             }
         }
+        
+        /* Add styles for YouTube learn links */
+        .youtube-link {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 2px 8px;
+            background-color: #e440d1;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 12px;
+                        vertical-align: middle;
+            transition: background-color 0.2s ease;
+                    }
+        
+        .youtube-link:hover {
+            background-color: #cc0000;
+            text-decoration: none;
+                    }
+        
+        .practice-text {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .practice-text p {
+            flex-grow: 1;
+            margin: 0;
+            padding-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -341,6 +372,16 @@
         let noCount = 0;
         let sometimesCount = 0;
         let yesCount = 0;
+
+        // Function to create a YouTube search URL for a given practice
+        function createYouTubeSearchUrl(practice) {
+            // Remove any special characters that might break the URL
+            const searchText = practice
+                .trim()
+                .replace(/\s+/g, '+'); // Replace spaces with +
+            
+            return `https://www.youtube.com/results?search_query=${searchText}`;
+        }
 
         // Function to load assessment data based on current language
         function loadAssessmentData() {
@@ -558,8 +599,15 @@
                             // Translate button labels and answer indicators
                             const getTranslation = (key) => window.i18n && window.i18n.__ ? window.i18n.__(key) : key;
                             
+                            // Create YouTube search URL for the practice
+                            const youtubeUrl = createYouTubeSearchUrl(practice);
+                            const learnText = getTranslation('learnMore') || 'Learn';
+                            
                             practiceDiv.innerHTML = `
-                                <p>${practice}</p>
+                                <div class="practice-text">
+                                    <p>${practice}</p>
+                                    <a href="${youtubeUrl}" class="youtube-link" target="_blank">[${learnText}]</a>
+                                </div>
                                 <div class="buttons">
                                     <button class="yes-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'yes')">${getTranslation('iDo')}</button>
                                     <button class="sometimes-btn" onclick="answerQuestion('${levelKey}', '${categoryName}', ${index}, 'sometimes')">${getTranslation('iDoSometimes')}</button>

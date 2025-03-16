@@ -55,7 +55,8 @@ const translations = {
     'advancedDeviceSecurity': 'Advanced Device Security',
     'operationalSecurity': 'Operational Security',
     'mobileDeviceSecurity': 'Mobile Device Security',
-    'physicalSecurity': 'Physical Security'
+    'physicalSecurity': 'Physical Security',
+    'learnMore': 'Learn'
   },
   
   // French translations
@@ -96,7 +97,8 @@ const translations = {
     'advancedDeviceSecurity': 'Sécurité Avancée des Appareils',
     'operationalSecurity': 'Sécurité Opérationnelle',
     'mobileDeviceSecurity': 'Sécurité des Appareils Mobiles',
-    'physicalSecurity': 'Sécurité Physique'
+    'physicalSecurity': 'Sécurité Physique',
+    'learnMore': 'Apprendre'
   },
   
   // Spanish translations
@@ -137,7 +139,8 @@ const translations = {
     'advancedDeviceSecurity': 'Seguridad Avanzada de Dispositivos',
     'operationalSecurity': 'Seguridad Operacional',
     'mobileDeviceSecurity': 'Seguridad de Dispositivos Móviles',
-    'physicalSecurity': 'Seguridad Física'
+    'physicalSecurity': 'Seguridad Física',
+    'learnMore': 'Aprender'
   },
   
   // German translations
@@ -178,7 +181,8 @@ const translations = {
     'advancedDeviceSecurity': 'Erweiterte Gerätesicherheit',
     'operationalSecurity': 'Operative Sicherheit',
     'mobileDeviceSecurity': 'Sicherheit Mobiler Geräte',
-    'physicalSecurity': 'Physische Sicherheit'
+    'physicalSecurity': 'Physische Sicherheit',
+    'learnMore': 'Lernen'
   },
   
   // Chinese translations
@@ -219,7 +223,8 @@ const translations = {
     'advancedDeviceSecurity': '高级设备安全',
     'operationalSecurity': '操作安全',
     'mobileDeviceSecurity': '移动设备安全',
-    'physicalSecurity': '物理安全'
+    'physicalSecurity': '物理安全',
+    'learnMore': '学习'
   },
   
   // Russian translations
@@ -260,7 +265,8 @@ const translations = {
     'advancedDeviceSecurity': 'Расширенная безопасность устройств',
     'operationalSecurity': 'Операционная безопасность',
     'mobileDeviceSecurity': 'Безопасность мобильных устройств',
-    'physicalSecurity': 'Физическая безопасность'
+    'physicalSecurity': 'Физическая безопасность',
+    'learnMore': 'Учиться'
   }
 };
 
@@ -408,6 +414,11 @@ function updatePageLanguage() {
         element.textContent = element.textContent.replace(text, translated);
       }
     }
+  });
+  
+  // Update YouTube learn links
+  document.querySelectorAll('.youtube-link').forEach(element => {
+    element.textContent = `[${__('learnMore')}]`;
   });
   
   // Update floating score text
