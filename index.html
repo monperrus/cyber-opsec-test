@@ -327,6 +327,30 @@
             margin: 0;
             padding-right: 10px;
         }
+
+        /* Style for question count labels */
+        .question-count {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        
+        /* Level headers should accommodate the new count */
+        .level-header h2 {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        @media (max-width: 600px) {
+            .question-count {
+                display: block;
+                margin-left: 0;
+                margin-top: 5px;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -492,6 +516,20 @@
             loadAssessmentData();
         });
 
+        // Count questions in a specific level
+        function countQuestionsInLevel(level) {
+            let count = 0;
+            if (level.practices && typeof level.practices === 'object') {
+                Object.keys(level.practices).forEach(categoryName => {
+                    const practices = level.practices[categoryName];
+                    if (Array.isArray(practices)) {
+                        count += practices.length;
+                    }
+                });
+            }
+            return count;
+        }
+
         // Count total questions
         function countTotalQuestions() {
             if (!assessmentData || !assessmentData.securityPracticesClassification) {
@@ -551,8 +589,19 @@
                 const securityPractices = window.i18n && window.i18n.__ ? 
                     window.i18n.__('securityPractices', level.name) : `${level.name} Security Practices`;
                 
+                // Count questions in this level
+                const levelQuestionCount = countQuestionsInLevel(level);
+                
+                // Get translation for "questions"
+                const questionsText = window.i18n && window.i18n.__ ? 
+                    window.i18n.__('questions') : 'questions';
+                
                 levelDiv.innerHTML = `
-                    <h2><i class="fas fa-shield-alt"></i> ${securityPractices}</h2>
+                    <h2>
+                        <i class="fas fa-shield-alt"></i> 
+                        ${securityPractices}
+                        <span class="question-count">(${levelQuestionCount} ${questionsText})</span>
+                    </h2>
                     <div class="level-description-box">
                         <p class="level-description"><strong>⚠️ ${level.description}</strong></p>
                     </div>
