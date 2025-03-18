@@ -6,6 +6,7 @@
 const availableLanguages = {
   'en': 'English',
   'fr': 'Français',
+  'sv': 'Svenska'
   // 'es': 'Español', // no data file yet
   // 'de': 'Deutsch', // no data file yet
   // 'zh': '中文',     // no data file yet
@@ -101,6 +102,66 @@ const translations = {
     'learnMore': 'Apprendre'
   },
   
+  'sv': {
+    // Page title and headings
+    'pageTitle': 'Cybersäkerhetsbedömning',
+    'securityScore': 'Din säkerhetspoäng',
+    'currentScore': 'Aktuell poäng',
+    
+    // Results messages
+    'excellent': 'Utmärkt! Du har mycket bra säkerhetsrutiner.',
+    'goodJob': 'Bra jobbat! Du följer många viktiga säkerhetsrutiner.',
+    'onTrack': 'Du är på rätt väg, men det finns utrymme för förbättring.',
+    'needsImprovement': 'Din säkerhet behöver förbättras. Överväg att implementera fler säkerhetsrutiner.',
+    'didntUnderstand': 'Du angav att du inte förstod %d frågor. Överväg att lära dig mer om dessa områden.',
+    
+    // Button labels
+    'iDo': 'Jag gör det',
+    'iDont': 'Jag gör det inte',
+    'iDoSometimes': 'Jag gör det ibland',
+    'iDontUnderstand': 'Jag förstår inte',
+    'restartButton': 'Ta bedömningen igen',
+    'learnMore': 'Lär dig',
+    
+    // Response indicators
+    'youDoThis': 'Du gör detta ✓',
+    'youDontDoThis': 'Du gör inte detta ✗',
+    'youDoThisSometimes': 'Du gör detta ibland ~',
+    'youDontUnderstand': 'Du förstår inte denna fråga ?',
+    
+    // General UI text
+    'loadingData': 'Laddar bedömningsdata...',
+    'loadingLanguageData': 'Laddar språkdata...',
+    'questions': 'frågor',
+    'result': 'resultat',
+    'results': 'resultat',
+    
+    // Security level names (already in data but needed for UI)
+    'Essential': 'Grundläggande',
+    'Serious': 'Avancerad',
+    'Paranoid': 'Paranoid',
+    
+    // Category names
+    'passwordManagement': 'Lösenordshantering',
+    'deviceSecurity': 'Enhetssäkerhet',
+    'emailSecurity': 'E-postsäkerhet',
+    'browserSecurity': 'Webbläsarsäkerhet',
+    'networkSecurity': 'Nätverkssäkerhet',
+    'generalSecurityPractices': 'Allmänna säkerhetsrutiner',
+    'developerSecurity': 'Utvecklarsäkerhet',
+    'advancedDeviceSecurity': 'Avancerad enhetssäkerhet',
+    'operationalSecurity': 'Operativ säkerhet',
+    
+    // Section headers for academic view
+    'Books': 'Böcker',
+    'Book Chapters': 'Bokkapitel',
+    'Refereed Articles': 'Granskade artiklar',
+    'Refereed Conference Papers': 'Granskade konferensartiklar',
+    'Refereed Workshop Papers': 'Granskade workshopartiklar',
+    
+    // Template strings
+    'securityPractices': 'Säkerhetsrutiner'
+  },
   // Spanish translations
   'es': {
     'pageTitle': 'Evaluación de Seguridad Cibernética',

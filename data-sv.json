@@ -1,0 +1,123 @@
+{
+  "securityPracticesClassification": {
+    "level1": {
+      "name": "Grundläggande",
+      "description": "Detta är grundläggande säkerhetsrutiner som alla bör implementera",
+      "practices": {
+        "passwordManagement": [
+          "Jag använder en lösenordshanterare för att säkert lagra alla mina lösenord (Google Passwords, Bitwarden, etc)",
+          "Jag använder unika lösenord för varje konto",
+          "Jag skapar alltid starka lösenord (12+ tecken med blandade stora och små bokstäver, siffror, symboler)",
+          "Jag delar aldrig mina lösenord med andra",
+          "Jag använder inte lättgissad information i mina lösenord (namn, födelsedagar, etc.)"
+        ],
+        "deviceSecurity": [
+          "Jag låser alltid min skärm när jag lämnar min enhet",
+          "Jag håller mina operativsystem och applikationer uppdaterade",
+          "Jag har antivirus/anti-malware program installerat och uppdaterat",
+          "Jag lämnar inte mina enheter obevakade på offentliga platser"
+        ],
+        "emailSecurity": [
+          "Jag verifierar avsändarens e-postadresser och länkar innan jag klickar på dem",
+          "Jag öppnar inte misstänkta bilagor",
+          "Jag är uppmärksam på phishing-försök",
+          "Jag använder skräppostfilter på mina e-postkonton",
+          "Jag använder inte min primära e-post för reklam eller mindre viktiga tjänster"
+        ],
+        "generalSecurityPractices": [
+          "Jag säkerhetskopierar viktiga data regelbundet",
+          "Jag använder integritetsfokuserade webbläsare som Brave/Firefox med integritetsinställningar",
+          "Jag kontrollerar app-behörigheter innan jag installerar nya applikationer",
+          "Jag ser över mina integritetsinställningar på sociala medier"
+        ],
+        "networkSecurity": [
+          "Jag använder ett bra wifi-lösenord (WPA) för mitt hemmanätverk"
+        ]
+      }
+    },
+    "level2": {
+      "name": "Avancerad",
+      "description": "För dem som vill ha starkare säkerhet eller har känslig information",
+      "practices": {
+        "passwordManagement": [
+          "Jag använder alltid tvåfaktorsautentisering på alla konton",
+          "Jag byter lösenord regelbundet, särskilt för kritiska konton",
+          "Jag använder en säkerhetsnyckel för tvåfaktorsautentisering på kritiska konton",
+          "Jag har olika säkerhetsfrågor och svar för varje konto",
+          "Jag använder olika e-postkonton för olika ändamål",
+          "Jag granskar regelbundet min lösenordshanterare för svaga eller komprometterade lösenord"
+        ],
+        "browserSecurity": [
+          "Jag använder integritetsblockering i webbläsaren för att begränsa tredjepartsföljning (uBlock origin)",
+          "Jag använder privat/incognito-surfning för känsliga aktiviteter"
+        ],
+        "emailSecurity": [
+          "Jag använder e-postleverantör som avvisar ogiltiga SPF- och DKIM-e-postmeddelanden",
+          "Jag har e-postalias eller tillfälliga e-postadresser för registreringar",
+          "Jag verifierar målet innan jag klickar på förkortade URL:er",
+          "Jag verifierar digitala signaturer på viktiga e-postmeddelanden"
+        ],
+        "networkSecurity": [
+          "Jag använder alltid end-to-end-kryptering för mina meddelanden och samtal",
+          "Jag säkrar min hemrouter med ett starkt lösenord",
+          "Jag använder alltid VPN när jag ansluter till offentligt Wi-Fi",
+          "Jag använder säkra DNS-tjänster (DNS över HTTPS)",
+          "Jag aktiverar inloggningsaviseringar och jag granskar kontoaktivitet",
+          "Jag har separat gäst-Wi-Fi för besökare",
+          "Jag kontrollerar regelbundet vilka enheter som är anslutna till mitt nätverk"
+        ],
+        "generalSecurityPractices": [
+          "Jag har fullständig diskkryptering på alla enheter",
+          "Jag har krypterade säkerhetskopior",
+          "Jag underhåller offlinekopior av kritisk data",
+          "Jag strimlar eller raderar känsliga dokument på ett säkert sätt"
+        ]
+      }
+    },
+    "level3": {
+      "name": "Paranoid",
+      "description": "För högsäkerhetsbehov eller de med specifika hotmodeller",
+      "practices": {
+        "passwordManagement": [
+          "Jag har en fysisk säkerhetsnyckel för enhetsinloggning",
+          "Jag har en fysisk säkerhetsnyckel på alla onlinekonton",
+          "Jag använder hellre lösenordsfraser istället för lösenord när det är lämpligt"
+        ],
+        "emailSecurity": [
+          "Jag använder endast krypterade e-postmeddelanden med GPG",
+          "Jag verifierar PGP-fingeravtryck innan kommunikation",
+          "Jag roterar mina PGP-nycklar regelbundet"
+        ],
+        "browserSecurity": [
+          "Jag inaktiverar webbläsartelemetri och spårning",
+          "Jag använder webbläsarkompartmentalisering för olika uppgifter",
+          "Jag använder en separat webbläsare för ekonomiska eller känsliga aktiviteter"
+        ],
+        "developerSecurity": [
+          "Jag använder isolerade utvecklingsmiljöer för opålitlig kod, Git-klonar och bygger i separata containrar",
+          "Jag signerar alla mina commits",
+          "Jag skannar beroenden efter sårbarheter för alla projekt jag installerar",
+          "Jag verifierar checksummor innan jag installerar programvara",
+          "Jag granskar källkod innan jag kompilerar eller kör den"
+        ],
+        "networkSecurity": [
+          "Jag använder alltid VPN",
+          "Jag övervakar utgående trafik; LittleSnitch eller Lulu (Mac), OpenSnitch (Linux)",
+          "Jag har enhetsspårning aktiverad och fjärradviseringar på mina enheter",
+          "Jag använder intrångsdetektionssystem, jag granskar regelbundet mitt nätverk för obehöriga enheter"
+        ],
+        "advancedDeviceSecurity": [
+          "Jag använder air-gapped datorer för högkänsliga uppgifter",
+          "Jag använder säkerhetsfokuserade operativsystem (Qubes, Tails, etc.)",
+          "Jag använder MAC-adressrandomisering",
+          "Jag använder secure boot med hårdvaruförankrad tillit"
+        ],
+        "operationalSecurity": [
+          "Jag praktiserar motövervakning vid behov",
+          "Jag använder engångsenheter för högriskaktiviteter",
+          "Jag har ett kommunikationssäkerhetsprotokoll för nödsituationer"
+        ]
+      }
+    }
+  }
+}
