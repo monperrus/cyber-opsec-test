@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="styles-i18n.css">
     <!-- Add the i18n script in the head for earlier loading -->
     <script src="i18n.js"></script>
+    <!-- Add level selector styles and script -->
+    <link rel="stylesheet" href="level-selector.css">
+    <script src="level-selector.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -396,6 +399,7 @@
         let noCount = 0;
         let sometimesCount = 0;
         let yesCount = 0;
+        let currentLevel = localStorage.getItem('selectedSecurityLevel') || 'level1'; // Default to level1
 
         // Function to create a YouTube search URL for a given practice
         function createYouTubeSearchUrl(practice) {
@@ -407,11 +411,32 @@
             return `https://www.youtube.com/results?search_query=${searchText}`;
         }
 
-        // Function to load assessment data based on current language
-        function loadAssessmentData() {
+        // Function to load assessment data based on current language and level
+        function loadAssessmentData(level) {
+            // Update current level if provided
+            if (level) {
+                currentLevel = level;
+            }
+            
             const container = document.getElementById('assessment-container');
             const loadingMessage = window.i18n && window.i18n.__ ? window.i18n.__('loadingLanguageData') : 'Loading assessment data...';
-            container.innerHTML = `<p data-i18n="loadingLanguageData">${loadingMessage}</p>`;
+            
+            // Keep the level selector visible but show loading message below it
+            const levelSelector = container.querySelector('.level-selector-container');
+            if (levelSelector) {
+                // Clear everything after the level selector
+                while (levelSelector.nextSibling) {
+                    container.removeChild(levelSelector.nextSibling);
+                }
+                
+                // Add loading message
+                const loadingElement = document.createElement('p');
+                loadingElement.setAttribute('data-i18n', 'loadingLanguageData');
+                loadingElement.textContent = loadingMessage;
+                container.appendChild(loadingElement);
+            } else {
+                container.innerHTML = `<p data-i18n="loadingLanguageData">${loadingMessage}</p>`;
+            }
             
             // Use the i18n loadLanguageData function with error handling
             const loadData = window.i18n && window.i18n.loadLanguageData ? window.i18n.loadLanguageData : function() {
@@ -428,10 +453,28 @@
                 })
                 .catch(error => {
                     console.error('Error loading JSON:', error);
-                    document.getElementById('assessment-container').innerHTML = 
-                        '<p style="color: red;">Error loading assessment data. Please check the console for details.</p>';
+                    
+                    // Create error message
+                    const errorElement = document.createElement('p');
+                    errorElement.style.color = 'red';
+                    errorElement.textContent = 'Error loading assessment data. Please check the console for details.';
+                    
+                    // Keep the level selector if it exists
+                    if (levelSelector) {
+                        // Clear everything after the level selector
+                        while (levelSelector.nextSibling) {
+                            container.removeChild(levelSelector.nextSibling);
+                        }
+                        container.appendChild(errorElement);
+                    } else {
+                        container.innerHTML = '';
+                        container.appendChild(errorElement);
+                    }
                 });
         }
+        
+        // Make loadAssessmentData available globally
+        window.loadAssessmentData = loadAssessmentData;
         
         // Function to reload data when language changes
         function reloadAssessmentData() {
@@ -512,8 +555,23 @@
                 console.error("i18n is not available. Using fallback.");
             }
             
-            // Load assessment data based on the selected language
-            loadAssessmentData();
+            // Get the stored level or use default
+            const storedLevel = localStorage.getItem('selectedSecurityLevel');
+            if (storedLevel) {
+                currentLevel = storedLevel;
+                console.log(`Using stored level: ${currentLevel}`);
+                
+                // Set the dropdown to the stored level after it's created
+                setTimeout(() => {
+                    const levelSelect = document.getElementById('security-level');
+                    if (levelSelect) {
+                        levelSelect.value = currentLevel;
+                    }
+                }, 100);
+            }
+            
+            // Load assessment data based on the selected language and level
+            loadAssessmentData(currentLevel);
         });
 
         // Count questions in a specific level
@@ -539,23 +597,42 @@
             let count = 0;
             const classification = assessmentData.securityPracticesClassification;
             
-            // Iterate through the levels
-            Object.keys(classification).forEach(levelKey => {
-                const level = classification[levelKey];
-                
-                // If practices is an object with categories
-                if (level.practices && typeof level.practices === 'object') {
-                    Object.keys(level.practices).forEach(category => {
-                        const practices = level.practices[category];
-                        if (Array.isArray(practices)) {
-                            count += practices.length;
-                        }
-                    });
+            // Only count questions up to the selected level
+            const levels = getLevelsToInclude(currentLevel);
+            
+            // Iterate through the selected levels
+            levels.forEach(levelKey => {
+                if (classification[levelKey]) {
+                    const level = classification[levelKey];
+                    
+                    // If practices is an object with categories
+                    if (level.practices && typeof level.practices === 'object') {
+                        Object.keys(level.practices).forEach(category => {
+                            const practices = level.practices[category];
+                            if (Array.isArray(practices)) {
+                                count += practices.length;
+                            }
+                        });
+                    }
                 }
             });
             
-            console.log(`Total questions: ${count}`);
+            console.log(`Total questions for level ${currentLevel}: ${count}`);
             return count;
+        }
+        
+        // Get levels to include based on selected level
+        function getLevelsToInclude(selectedLevel) {
+            switch(selectedLevel) {
+                case 'level1':
+                    return ['level1'];
+                case 'level2':
+                    return ['level1', 'level2'];
+                case 'level3':
+                    return ['level1', 'level2', 'level3'];
+                default:
+                    return ['level1'];
+            }
         }
 
         // Initialize the assessment
@@ -567,7 +644,19 @@
             
             console.log("Initializing assessment...");
             const container = document.getElementById('assessment-container');
-            container.innerHTML = '';
+            
+            // Preserve the level selector if it exists
+            const levelSelector = container.querySelector('.level-selector-container');
+            if (levelSelector) {
+                // Clear everything after the level selector
+                while (levelSelector.nextSibling) {
+                    container.removeChild(levelSelector.nextSibling);
+                }
+            } else {
+                container.innerHTML = '';
+            }
+            
+            // Reset counters
             answeredQuestions = 0;
             score = 0;
             unsureCount = 0;
@@ -577,7 +666,13 @@
             
             const classification = assessmentData.securityPracticesClassification;
             
-            Object.keys(classification).forEach(levelKey => {
+            // Get levels to include
+            const levelsToInclude = getLevelsToInclude(currentLevel);
+            
+            // Only show levels up to the selected level
+            levelsToInclude.forEach(levelKey => {
+                if (!classification[levelKey]) return;
+                
                 const level = classification[levelKey];
                 
                 // Create level description header
