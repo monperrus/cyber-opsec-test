@@ -547,6 +547,21 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log("Starting application...");
             
+            // Check for language in URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const langParam = urlParams.get('lang');
+            const supportedLanguages = ['en', 'fr', 'sv'];
+            
+            if (langParam && supportedLanguages.includes(langParam)) {
+                // Set the language from URL parameter
+                localStorage.setItem('selectedLanguage', langParam);
+                console.log(`Language set from URL parameter: ${langParam}`);
+            } else if (!localStorage.getItem('selectedLanguage')) {
+                // Set English as default if no language is stored
+                localStorage.setItem('selectedLanguage', 'en');
+                console.log('Default language set to English');
+            }
+            
             // Check if i18n is available
             if (window.i18n && typeof window.i18n.initLanguages === 'function') {
                 // Initialize internationalization
@@ -554,6 +569,30 @@
             } else {
                 console.error("i18n is not available. Using fallback.");
             }
+            
+            // Update URL when language changes via dropdown
+            // Use MutationObserver to detect when language selector is added to DOM
+            const observer = new MutationObserver(function(mutations) {
+                const langSelect = document.getElementById('language-selector');
+                if (langSelect && !langSelect.hasAttribute('data-url-listener')) {
+                    langSelect.setAttribute('data-url-listener', 'true');
+                    langSelect.addEventListener('change', function() {
+                        const newLang = this.value;
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('lang', newLang);
+                        window.history.replaceState({}, '', url);
+                    });
+                    
+                    // Set initial URL lang parameter
+                    const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+                    const url = new URL(window.location.href);
+                    if (!url.searchParams.has('lang')) {
+                        url.searchParams.set('lang', currentLang);
+                        window.history.replaceState({}, '', url);
+                    }
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
             
             // Get the stored level or use default
             const storedLevel = localStorage.getItem('selectedSecurityLevel');
